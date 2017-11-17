@@ -24,9 +24,9 @@ public class MathGraph {
         jGraph = new JGraph(m_jgAdapter);
     }
 
-    public JGraph create(Set<Vertex> V, Set<Edge> E) {
+    public JGraph create(Set<String> V, Set<Edge> E) {
         try {
-            for (Vertex v : V) {
+            for (String v : V) {
                 addV(v);
             }
             for (Edge e : E) {
@@ -41,16 +41,24 @@ public class MathGraph {
         return jGraph;
     }
 
-    void addV(Vertex v) {
+    void addV(String v) {
         Random random = new Random();
-        g.addVertex(v.getName());
-        positionVertexAt(v.getName(), random.nextInt(400), random.nextInt(400));
+        g.addVertex(v);
+        positionVertexAt(v, random.nextInt(400), random.nextInt(400));
     }
 
     void addE(Edge edge) {
         g.setEdgeWeight(edge, edge.getWeig());
-        g.addEdge(edge.getV1().getName(), edge.getV2().getName(), edge);
+        g.addEdge(edge.getV1(), edge.getV2(), edge);
         System.out.println(g.getEdgeWeight(edge));
+    }
+
+    boolean contains(String vertex){
+        return g.containsVertex(vertex);
+    }
+
+    boolean contains(Edge edge){
+        return g.containsEdge(edge);
     }
 
     private void positionVertexAt(Object vertex, int x, int y) {

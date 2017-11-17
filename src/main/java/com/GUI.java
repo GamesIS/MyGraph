@@ -79,9 +79,32 @@ public class GUI {
                         if (mathGraph == null) {
                             mathGraph = new MathGraph();
                         }
+
+                        /***************/
+                        if (!mathGraph.contains(result)) {
+                            try {
+                                mathGraph.addV(result);
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(frame,
+                                        ex.getMessage(),
+                                        "Ошибка",
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+                            frame.getContentPane().removeAll();
+                            if (mathGraph.getG().vertexSet().size() > 0 && !delVertex.isEnabled()) {
+                                delVertex.setEnabled(true);
+                            }
+                            if (mathGraph.getG().vertexSet().size() > 1 && !addEdge.isEnabled()) {
+                                addEdge.setEnabled(true);
+                            }
+
+                            frame.getContentPane().add(new JScrollPane(mathGraph.getjGraph()));
+                            frame.pack();
+                        }
+                        /***************/
                         if (!mathGraph.getG().vertexSet().contains(result)) {
                             try {
-                                mathGraph.addV(new Vertex(result));
+                                mathGraph.addV(result);
                             } catch (Exception ex) {
                                 JOptionPane.showMessageDialog(frame,
                                         ex.getMessage(),
@@ -167,7 +190,7 @@ public class GUI {
                     try {
                         if (result != null && !"".equals(result)) {
                             if(sourceV != null && targetV != null){
-                                mathGraph.addE(new Edge(new Vertex(sourceV), new Vertex(targetV), Double.valueOf(result)));
+                                mathGraph.addE(new Edge(sourceV, targetV, Double.valueOf(result)));
                             }
 
                         } else {
@@ -425,7 +448,7 @@ public class GUI {
     }
 
     private static JGraph convertToGraph(java.util.List<String> fileText) throws Exception {
-        Set<Vertex> V = new HashSet<>();
+        Set<String> V = new HashSet<>();
         Set<Edge> E = new HashSet<>();
         int countEdge = Integer.valueOf(fileText.get(0).trim());
         if (countEdge != fileText.size() - 1) throw new Exception("Неверно указано количество ребер");
@@ -455,14 +478,12 @@ public class GUI {
                     edgeWeight = Double.valueOf(str.substring(index, strArray.length));
                 }
             }
-            Vertex vertex1 = new Vertex(V1);
-            if (!V.contains(vertex1)) {
-                V.add(vertex1);
-            }
-            Vertex vertex2 = new Vertex(V2);
-            if (!V.contains(vertex2)) V.add(vertex2);
+            if (!V.contains(V1))
+                V.add(V1);
+            if (!V.contains(V2))
+                V.add(V2);
 
-            Edge edge = new Edge(vertex1, vertex2, edgeWeight);
+            Edge edge = new Edge(V1, V2, edgeWeight);
             if (!E.contains(edge)) E.add(edge);
         }
         mathGraph = new MathGraph();
