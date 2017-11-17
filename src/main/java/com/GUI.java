@@ -91,10 +91,10 @@ public class GUI {
                                         JOptionPane.ERROR_MESSAGE);
                             }
                             frame.getContentPane().removeAll();
-                            if (mathGraph.getG().vertexSet().size() > 0 && !delVertex.isEnabled()) {
+                            if (mathGraph.getCountVertex() > 0 && !delVertex.isEnabled()) {
                                 delVertex.setEnabled(true);
                             }
-                            if (mathGraph.getG().vertexSet().size() > 1 && !addEdge.isEnabled()) {
+                            if (mathGraph.getCountVertex() > 1 && !addEdge.isEnabled()) {
                                 addEdge.setEnabled(true);
                             }
 
@@ -102,7 +102,7 @@ public class GUI {
                             frame.pack();
                         }
                         /***************/
-                        if (!mathGraph.getG().vertexSet().contains(result)) {
+                        if (!mathGraph.contains(result)) {
                             try {
                                 mathGraph.addV(result);
                             } catch (Exception ex) {
@@ -112,10 +112,10 @@ public class GUI {
                                         JOptionPane.ERROR_MESSAGE);
                             }
                             frame.getContentPane().removeAll();
-                            if (mathGraph.getG().vertexSet().size() > 0 && !delVertex.isEnabled()) {
+                            if (mathGraph.getCountVertex() > 0 && !delVertex.isEnabled()) {
                                 delVertex.setEnabled(true);
                             }
-                            if (mathGraph.getG().vertexSet().size() > 1 && !addEdge.isEnabled()) {
+                            if (mathGraph.getCountVertex() > 1 && !addEdge.isEnabled()) {
                                 addEdge.setEnabled(true);
                             }
 
@@ -153,10 +153,10 @@ public class GUI {
                     return;
                 } else {
                     for (Object item : mathGraph.getjGraph().getSelectionCells()) {
-                        mathGraph.getG().removeVertex(item.toString());
+                        mathGraph.removeVertex(item.toString());
                     }
-                    if (mathGraph.getG().vertexSet().size() == 0) delVertex.setEnabled(false);
-                    if (mathGraph.getG().vertexSet().size() < 2) addEdge.setEnabled(false);
+                    if (mathGraph.getCountVertex() == 0) delVertex.setEnabled(false);
+                    if (mathGraph.getCountVertex() < 2) addEdge.setEnabled(false);
                 }
             }
         });
@@ -176,7 +176,7 @@ public class GUI {
                 } else {
                     String sourceV = mathGraph.getjGraph().getSelectionCells()[0].toString();
                     String targetV = mathGraph.getjGraph().getSelectionCells()[1].toString();
-                    if (mathGraph.getG().getEdge(sourceV, targetV) != null) {
+                    if (mathGraph.getEdge(sourceV, targetV) != null) {
                         JOptionPane.showMessageDialog(frame,
                                 "Выберите две не смежные вершины для добавления ребра",
                                 "Ошибка",
@@ -206,7 +206,7 @@ public class GUI {
                                 "Ошибка",
                                 JOptionPane.ERROR_MESSAGE);
                     }
-                    if (mathGraph.getG().edgeSet().size() > 0) {
+                    if (mathGraph.getCountEdge() > 0) {
                         delEdge.setEnabled(true);
                         showWeightEdge.setEnabled(true);
                     }
@@ -229,14 +229,14 @@ public class GUI {
                 } else {
                     String sourceV = mathGraph.getjGraph().getSelectionCells()[0].toString();
                     String targetV = mathGraph.getjGraph().getSelectionCells()[1].toString();
-                    if (mathGraph.getG().removeEdge(sourceV, targetV) == null) {
+                    if (mathGraph.removeEdge(sourceV, targetV) == null) {
                         JOptionPane.showMessageDialog(frame,
                                 "Выберите смежные вершины для удаления ребра",
                                 "Ошибка",
                                 JOptionPane.WARNING_MESSAGE);
                         return;
                     }
-                    if (mathGraph.getG().edgeSet().size() == 0) {
+                    if (mathGraph.getCountEdge() == 0) {
                         delEdge.setEnabled(false);
                         showWeightEdge.setEnabled(false);
                     }
@@ -251,7 +251,7 @@ public class GUI {
             public void actionPerformed(ActionEvent e) {
                 int count;
                 if (mathGraph != null) {
-                    count = mathGraph.getG().edgeSet().size();
+                    count = mathGraph.getCountEdge();
                 } else count = 0;
                 JOptionPane.showMessageDialog(frame,
                         "\"" + count + "\"",
@@ -267,7 +267,7 @@ public class GUI {
             public void actionPerformed(ActionEvent e) {
                 int count;
                 if (mathGraph != null) {
-                    count = mathGraph.getG().vertexSet().size();
+                    count = mathGraph.getCountVertex();
                 } else count = 0;
                 JOptionPane.showMessageDialog(frame,
                         "\"" + count + "\"",
@@ -291,7 +291,7 @@ public class GUI {
                 } else {
                     String sourceV = mathGraph.getjGraph().getSelectionCells()[0].toString();
                     String targetV = mathGraph.getjGraph().getSelectionCells()[1].toString();
-                    if (mathGraph.getG().getEdge(sourceV, targetV) == null) {
+                    if (mathGraph.getEdge(sourceV, targetV) == null) {
                         JOptionPane.showMessageDialog(frame,
                                 "Выберите смежные вершины для того, чтобы увидеть вес ребра",
                                 "Ошибка",
@@ -299,8 +299,8 @@ public class GUI {
                         return;
                     }
 
-                    double count = mathGraph.getG().getEdgeWeight(mathGraph.getG().getEdge(sourceV, targetV));
-                    if (mathGraph.getG().edgeSet().size() == 0) delEdge.setEnabled(false);
+                    double count = mathGraph.getEdgeWeight(mathGraph.getEdge(sourceV, targetV));
+                    if (mathGraph.getCountEdge() == 0) delEdge.setEnabled(false);
                     JOptionPane.showMessageDialog(frame,
                             "\"" + count + "\"",
                             "Вес ребра",
@@ -349,13 +349,13 @@ public class GUI {
                         mathGraph = new MathGraph();
                         mathGraph.setjGraph(convertToGraph(fileText));
 
-                        if (mathGraph.getG().vertexSet().size() > 0) delVertex.setEnabled(true);
+                        if (mathGraph.getCountVertex() > 0) delVertex.setEnabled(true);
                         else delVertex.setEnabled(false);
-                        if (mathGraph.getG().vertexSet().size() > 2) addEdge.setEnabled(true);
+                        if (mathGraph.getCountVertex() > 2) addEdge.setEnabled(true);
                         else addEdge.setEnabled(false);
-                        if (mathGraph.getG().edgeSet().size() > 0) delEdge.setEnabled(true);
+                        if (mathGraph.getCountEdge() > 0) delEdge.setEnabled(true);
                         else delEdge.setEnabled(false);
-                        if (mathGraph.getG().edgeSet().size() > 0) showWeightEdge.setEnabled(true);
+                        if (mathGraph.getCountEdge() > 0) showWeightEdge.setEnabled(true);
                         else showWeightEdge.setEnabled(false);
 
 
@@ -405,16 +405,7 @@ public class GUI {
                         }
                     }
                     try (FileWriter fw = new FileWriter(fc.getSelectedFile())) {
-
-                        String fileText = "" + (mathGraph.getG().edgeSet().size());
-
-                        for (Edge edge : mathGraph.getG().edgeSet()) {
-                            fileText = fileText + "\n"
-                                    + mathGraph.getG().getEdgeSource(edge)
-                                    + " " + mathGraph.getG().getEdgeTarget(edge)
-                                    + " " + mathGraph.getG().getEdgeWeight(edge);
-                        }
-                        fw.write(fileText);
+                        fw.write(mathGraph.toString());
 
                     } catch (IOException ex) {
                         System.out.println("Всё погибло! " + ex);
